@@ -289,7 +289,7 @@ export default function Dashboard() {
                 )}
               </tbody>
             </table>
-          </div>
+          </Card>
         </section>
 
         <aside className="space-y-4">
