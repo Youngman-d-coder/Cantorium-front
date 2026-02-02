@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { buildUrl, endpoints } from "../config";
 import { useAuth } from "../auth";
 import { useToast } from "../components/ui/Toast";
-import { Button, Input, Spinner } from "../components/ui/Components";
+import { Button, Input } from "../components/ui/Components";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");

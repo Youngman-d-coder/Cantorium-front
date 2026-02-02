@@ -17,7 +17,7 @@ const languages = [
 
 export default function Profile() {
   const { user } = useAuth();
-  const { toast } = useToast();
+  const { showToast } = useToast();
   const [displayName, setDisplayName] = useState(user?.name || "");
   const [preferredLang, setPreferredLang] = useState("en");
   const [notifications, setNotifications] = useState({
@@ -35,16 +35,15 @@ export default function Profile() {
     await new Promise(resolve => setTimeout(resolve, 1000));
     setIsSaving(false);
     setHasChanges(false);
-    toast({ type: 'success', title: 'Settings saved!', message: 'Your profile has been updated successfully.' });
+    showToast('Your profile has been updated successfully.', 'success');
   };
 
   const handlePlanSelect = (planId: string) => {
     setSelectedPlan(planId);
-    toast({ 
-      type: 'info', 
-      title: 'Plan selected', 
-      message: planId === 'pro' ? 'Redirecting to checkout...' : 'You are on the free plan.' 
-    });
+    showToast(
+      planId === 'pro' ? 'Redirecting to checkout...' : 'You are on the free plan.',
+      'info'
+    );
   };
 
   const updateField = (callback: () => void) => {
@@ -92,7 +91,7 @@ export default function Profile() {
               </p>
               <Input 
                 value={user?.email || ""}
-                readOnly
+                disabled
                 hint="Email cannot be changed"
                 className="opacity-70 cursor-not-allowed"
               />
@@ -209,7 +208,7 @@ export default function Profile() {
                   <Button 
                     variant={selectedPlan === plan.id ? "success" : "primary"} 
                     size="sm"
-                    onClick={(e) => { e.stopPropagation(); handlePlanSelect(plan.id); }}
+                    onClick={(e) => { e?.stopPropagation(); handlePlanSelect(plan.id); }}
                   >
                     {selectedPlan === plan.id ? '✓ Current' : 'Select'}
                   </Button>
@@ -232,7 +231,7 @@ export default function Profile() {
               variant="danger" 
               size="sm" 
               className="w-full"
-              onClick={() => toast({ type: 'warning', title: 'Confirmation required', message: 'Please contact support to delete your account.' })}
+              onClick={() => showToast('Please contact support to delete your account.', 'warning')}
             >
               Delete Account
             </Button>

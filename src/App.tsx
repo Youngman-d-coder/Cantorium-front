@@ -22,12 +22,12 @@ const navItems = [
   { label: 'Practice', path: '/practice' },
 ];
 
-function ProtectedRoute({ children }: { children: JSX.Element }) {
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
   if (!user) {
     return <Navigate to="/signin" replace />;
   }
-  return children;
+  return <>{children}</>;
 }
 
 // Wrapper for the app shell (used for authenticated pages)

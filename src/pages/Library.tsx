@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useToast } from "../components/ui/Toast";
-import { Button, Badge, Card, Input, EmptyState, Skeleton } from "../components/ui/Components";
+import { Button, Badge, Card, EmptyState, Skeleton } from "../components/ui/Components";
 
 const libraryItems = [
   { id: "l1", title: "Nocturne in Indigo", owner: "Sarah M.", difficulty: "Intermediate", tags: ["SATB", "English"], plays: 1240, forks: 32, language: "English", accent: "American" },
@@ -17,22 +17,22 @@ const filterOptions = ["All", "My Scripts", "Shared With Me", "Public", "Latin",
 export default function Library() {
   const [activeFilter, setActiveFilter] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading] = useState(false);
   const [playingId, setPlayingId] = useState<string | null>(null);
-  const { toast } = useToast();
+  const { showToast } = useToast();
 
   const handlePlay = (item: typeof libraryItems[0]) => {
     if (playingId === item.id) {
       setPlayingId(null);
-      toast({ type: 'info', title: 'Playback stopped', message: `Stopped playing "${item.title}"` });
+      showToast(`Stopped playing "${item.title}"`, 'info');
     } else {
       setPlayingId(item.id);
-      toast({ type: 'success', title: 'Now playing', message: `Playing "${item.title}" by ${item.owner}` });
+      showToast(`Playing "${item.title}" by ${item.owner}`, 'success');
     }
   };
 
   const handleFork = (item: typeof libraryItems[0]) => {
-    toast({ type: 'success', title: 'Script forked!', message: `"${item.title}" has been added to your scripts` });
+    showToast(`"${item.title}" has been added to your scripts`, 'success');
   };
 
   const filteredItems = libraryItems.filter(item => {
@@ -50,11 +50,11 @@ export default function Library() {
     return true;
   });
 
-  const getDifficultyVariant = (difficulty: string): "default" | "success" | "warning" | "error" | "info" => {
+  const getDifficultyVariant = (difficulty: string): "default" | "success" | "warning" | "danger" | "info" => {
     switch (difficulty) {
       case "Beginner": return "success";
       case "Intermediate": return "warning";
-      case "Advanced": return "error";
+      case "Advanced": return "danger";
       default: return "default";
     }
   };
@@ -152,11 +152,10 @@ export default function Library() {
           />
         ) : (
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {filteredItems.map((item, index) => (
+            {filteredItems.map((item) => (
               <Card
                 key={item.id}
                 className="p-4 transition-all duration-300 hover:-translate-y-1 hover:border-cyan-400/30 hover:shadow-lg hover:shadow-cyan-900/20 group"
-                style={{ animationDelay: `${index * 0.05}s` }}
               >
                 <div className="flex items-start justify-between">
                   <div>

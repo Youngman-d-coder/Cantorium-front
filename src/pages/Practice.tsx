@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useToast } from "../components/ui/Toast";
-import { Button, Badge, Card, ProgressBar, EmptyState } from "../components/ui/Components";
+import { Button, Badge, Card, ProgressBar } from "../components/ui/Components";
 
 const practicePieces = [
   { id: "p1", title: "Nocturne in Indigo", part: "Tenor", tempo: 88, key: "Dm", language: "English" },
@@ -23,31 +23,30 @@ export default function Practice() {
   const [practiceMode, setPracticeMode] = useState<'guided' | 'free'>('guided');
   const [loopEnabled, setLoopEnabled] = useState(false);
   const [metronomeEnabled, setMetronomeEnabled] = useState(false);
-  const { toast } = useToast();
+  const { showToast } = useToast();
 
   const handlePlay = () => {
     setIsPlaying(!isPlaying);
-    toast({ 
-      type: isPlaying ? 'info' : 'success', 
-      title: isPlaying ? 'Paused' : 'Playing', 
-      message: isPlaying ? 'Practice session paused' : 'Practice session started' 
-    });
+    showToast(
+      isPlaying ? 'Practice session paused' : 'Practice session started',
+      isPlaying ? 'info' : 'success'
+    );
   };
 
   const handleRecord = () => {
     if (isRecording) {
       setIsRecording(false);
-      toast({ type: 'success', title: 'Take saved!', message: 'Your recording has been saved for comparison' });
+      showToast('Your recording has been saved for comparison', 'success');
     } else {
       setIsRecording(true);
-      toast({ type: 'info', title: 'Recording started', message: 'Sing along with the playback...' });
+      showToast('Sing along with the playback...', 'info');
     }
   };
 
   const handleLoadPiece = (piece: typeof practicePieces[0]) => {
     setActivePart(piece.part);
     setTempo(piece.tempo);
-    toast({ type: 'success', title: 'Piece loaded', message: `Now practicing "${piece.title}" - ${piece.part} part` });
+    showToast(`Now practicing "${piece.title}" - ${piece.part} part`, 'success');
   };
 
   return (
@@ -103,7 +102,7 @@ export default function Practice() {
             </div>
             <div className="flex items-center gap-2 text-xs text-slate-200">
               <button 
-                onClick={() => { setLoopEnabled(!loopEnabled); toast({ type: 'info', title: loopEnabled ? 'Loop disabled' : 'Loop enabled' }); }}
+                onClick={() => { setLoopEnabled(!loopEnabled); showToast(loopEnabled ? 'Loop disabled' : 'Loop enabled', 'info'); }}
                 className={`rounded-full border px-3 py-1.5 transition-all duration-200 flex items-center gap-1 ${
                   loopEnabled ? 'border-cyan-400/50 bg-cyan-500/15 text-cyan-100' : 'border-slate-700 bg-slate-800/70 hover:border-cyan-400/30'
                 }`}
@@ -111,7 +110,7 @@ export default function Practice() {
                 <span>🔁</span> Loop A/B
               </button>
               <button 
-                onClick={() => { setMetronomeEnabled(!metronomeEnabled); toast({ type: 'info', title: metronomeEnabled ? 'Metronome off' : 'Metronome on' }); }}
+                onClick={() => { setMetronomeEnabled(!metronomeEnabled); showToast(metronomeEnabled ? 'Metronome off' : 'Metronome on', 'info'); }}
                 className={`rounded-full border px-3 py-1.5 transition-all duration-200 flex items-center gap-1 ${
                   metronomeEnabled ? 'border-violet-400/50 bg-violet-500/15 text-violet-100' : 'border-slate-700 bg-slate-800/70 hover:border-violet-400/30'
                 }`}
