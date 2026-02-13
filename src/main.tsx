@@ -5,6 +5,7 @@ import './index.css';
 import App from './App.tsx';
 import { ErrorBoundary } from './components/ErrorBoundary.tsx';
 import { validateEnv } from './env.ts';
+import { observeWebVitals, logPerformanceMetric, measureNavigationTiming } from './performance.ts';
 
 // Validate environment variables before starting the app
 try {
@@ -23,6 +24,10 @@ try {
     throw error;
   }
 }
+
+// Initialize performance monitoring
+observeWebVitals(logPerformanceMetric);
+measureNavigationTiming();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
