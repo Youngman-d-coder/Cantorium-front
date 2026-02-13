@@ -103,28 +103,46 @@ export function logPerformanceMetric(metric: PerformanceMetric): void {
 }
 
 /**
- * Measure navigation timing
+ * Measure navigation timing using Navigation Timing Level 2 API
  */
 export function measureNavigationTiming(): void {
-  if (!window.performance || !window.performance.timing) {
+  if (!window.performance) {
     return;
   }
 
   window.addEventListener('load', () => {
     setTimeout(() => {
-      const timing = window.performance.timing;
-      const navigationStart = timing.navigationStart;
+      // Use Navigation Timing Level 2 API (preferred)
+      const navEntries = window.performance.getEntriesByType('navigation');
+      if (navEntries.length > 0) {
+        const navTiming = navEntries[0] as PerformanceNavigationTiming;
+        
+        const metrics = {
+          'DNS Lookup': navTiming.domainLookupEnd - navTiming.domainLookupStart,
+          'TCP Connection': navTiming.connectEnd - navTiming.connectStart,
+          'Request Time': navTiming.responseStart - navTiming.requestStart,
+          'Response Time': navTiming.responseEnd - navTiming.responseStart,
+          'DOM Processing': navTiming.domComplete - navTiming.domInteractive,
+          'Total Load Time': navTiming.loadEventEnd - navTiming.fetchStart,
+        };
 
-      const metrics = {
-        'DNS Lookup': timing.domainLookupEnd - timing.domainLookupStart,
-        'TCP Connection': timing.connectEnd - timing.connectStart,
-        'Request Time': timing.responseStart - timing.requestStart,
-        'Response Time': timing.responseEnd - timing.responseStart,
-        'DOM Processing': timing.domComplete - timing.domLoading,
-        'Total Load Time': timing.loadEventEnd - navigationStart,
-      };
+        console.log('[Performance] Navigation Timing:', metrics);
+      } else if (window.performance.timing) {
+        // Fallback to Navigation Timing Level 1 API (deprecated but still widely supported)
+        const timing = window.performance.timing;
+        const navigationStart = timing.navigationStart;
 
-      console.log('[Performance] Navigation Timing:', metrics);
+        const metrics = {
+          'DNS Lookup': timing.domainLookupEnd - timing.domainLookupStart,
+          'TCP Connection': timing.connectEnd - timing.connectStart,
+          'Request Time': timing.responseStart - timing.requestStart,
+          'Response Time': timing.responseEnd - timing.responseStart,
+          'DOM Processing': timing.domComplete - timing.domLoading,
+          'Total Load Time': timing.loadEventEnd - navigationStart,
+        };
+
+        console.log('[Performance] Navigation Timing (deprecated API):', metrics);
+      }
     }, 0);
   });
 }

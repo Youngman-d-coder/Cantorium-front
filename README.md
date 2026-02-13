@@ -38,7 +38,7 @@ npm install
 
 3. Configure environment variables:
 ```bash
-cp .env .env.local
+cp .env.example .env.local
 ```
 
 Edit `.env.local` and set your API endpoints:
