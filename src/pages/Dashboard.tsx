@@ -107,7 +107,7 @@ export default function Dashboard() {
         setSessions(Array.isArray(sessionsRes) ? sessionsRes : fallbackSessions);
         setActivity(Array.isArray(dashboardRes?.activity) ? dashboardRes.activity : fallbackActivity);
         setLogs(Array.isArray(logsRes) ? logsRes.slice(0, 120) : fallbackLogs);
-      } catch (err) {
+      } catch {
         if (!controller.signal.aborted) {
           setError("Using sample data until the Cantorium API responds.");
           showToast("Using sample data — API connection failed", "warning", 5000);
@@ -149,7 +149,7 @@ export default function Dashboard() {
       controller.abort();
       ws.close();
     };
-  }, []);
+  }, [showToast]);
 
   const stats = useMemo(
     () => [

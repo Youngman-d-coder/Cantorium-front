@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 
 export type AuthUser = {
   id: string;
@@ -33,29 +33,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const setUser = (u: AuthUser | null) => {
+  const setUser = useCallback((u: AuthUser | null) => {
     setUserState(u);
     if (u) {
       localStorage.setItem(storageKey, JSON.stringify(u));
     } else {
       localStorage.removeItem(storageKey);
     }
-  };
+  }, []);
 
-  const signOut = () => setUser(null);
+  const signOut = useCallback(() => setUser(null), [setUser]);
 
-  const getAuthHeaders = (): Record<string, string> => {
+  const getAuthHeaders = useCallback((): Record<string, string> => {
     if (user?.token) {
       return { Authorization: `Bearer ${user.token}` };
     }
     return {};
-  };
+  }, [user]);
 
-  const value = useMemo(() => ({ user, setUser, signOut, getAuthHeaders }), [user]);
+  const value = useMemo(() => ({ user, setUser, signOut, getAuthHeaders }), [user, setUser, signOut, getAuthHeaders]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useAuth() {
   const ctx = useContext(AuthContext);
   if (!ctx) throw new Error("useAuth must be used within AuthProvider");

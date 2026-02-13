@@ -234,6 +234,7 @@ export function KeyboardShortcutsModal({ isOpen, onClose }: KeyboardShortcutsMod
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useKeyboardShortcuts() {
   const [isCommandPaletteOpen, setCommandPaletteOpen] = useState(false);
   const [isShortcutsModalOpen, setShortcutsModalOpen] = useState(false);
