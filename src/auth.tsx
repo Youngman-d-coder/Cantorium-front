@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase";
-import { signOut as firebaseSignOut, getCurrentUser } from "./services/firebaseAuth";
+import { signOut as firebaseSignOut } from "./services/firebaseAuth";
 
 export type AuthUser = {
   id: string;
@@ -46,13 +46,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
         try {
-          const authUser = await getCurrentUser();
+          // Convert Firebase user directly to avoid extra async call
+          const token = await firebaseUser.getIdToken();
+          const authUser: AuthUser = {
+            id: firebaseUser.uid,
+            email: firebaseUser.email || '',
+            name: firebaseUser.displayName || undefined,
+            token,
+          };
           setUserState(authUser);
-          if (authUser) {
-            localStorage.setItem(storageKey, JSON.stringify(authUser));
-          }
+          localStorage.setItem(storageKey, JSON.stringify(authUser));
         } catch (error) {
-          console.error("Error getting current user:", error);
+          console.error("Error getting user token:", error);
           setUserState(null);
           localStorage.removeItem(storageKey);
         }

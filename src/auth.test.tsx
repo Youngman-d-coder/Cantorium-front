@@ -14,7 +14,7 @@ vi.mock('./services/firebaseAuth', () => ({
 }));
 
 vi.mock('firebase/auth', () => ({
-  onAuthStateChanged: vi.fn((auth, callback) => {
+  onAuthStateChanged: vi.fn((_auth, callback) => {
     // Immediately call callback with null user
     callback(null);
     // Return unsubscribe function

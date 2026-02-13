@@ -38,16 +38,21 @@ async function convertFirebaseUser(user: User): Promise<AuthUser> {
 async function createUserDocument(user: User) {
   if (!db) return;
   
-  const userRef = doc(db, 'users', user.uid);
-  const userSnap = await getDoc(userRef);
-  
-  if (!userSnap.exists()) {
-    await setDoc(userRef, {
-      email: user.email,
-      name: user.displayName,
-      createdAt: serverTimestamp(),
-      updatedAt: serverTimestamp(),
-    });
+  try {
+    const userRef = doc(db, 'users', user.uid);
+    const userSnap = await getDoc(userRef);
+    
+    if (!userSnap.exists()) {
+      await setDoc(userRef, {
+        email: user.email,
+        name: user.displayName,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+      });
+    }
+  } catch (error) {
+    console.error('Error creating user document:', error);
+    // Don't throw - allow auth to succeed even if Firestore write fails
   }
 }
 
