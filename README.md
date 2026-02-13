@@ -1,73 +1,235 @@
-# React + TypeScript + Vite
+# Cantorium - Choral AI Studio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+[![CI](https://github.com/Youngman-d-coder/Cantorium-front/workflows/CI/badge.svg)](https://github.com/Youngman-d-coder/Cantorium-front/actions)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-Currently, two official plugins are available:
+A modern, industry-ready web application for choral music composition powered by AI. Built with React, TypeScript, and Vite.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Features
 
-## React Compiler
+- **AI-Powered Composition**: Create choral music with AI assistance
+- **Practice Studio**: Interactive practice sessions with voice-part isolation
+- **Composition Library**: Organize and manage your musical works
+- **Real-time Collaboration**: WebSocket-based live updates
+- **Responsive Design**: Beautiful, modern UI with Tailwind CSS
+- **Keyboard Shortcuts**: Efficient command palette and navigation
+- **Type-Safe**: Full TypeScript support for enhanced developer experience
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 📋 Prerequisites
 
-## Expanding the ESLint configuration
+- Node.js 18.x or higher
+- npm or yarn
+- Docker (optional, for containerized deployment)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🛠️ Installation
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Local Development
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+1. Clone the repository:
+```bash
+git clone https://github.com/Youngman-d-coder/Cantorium-front.git
+cd Cantorium-front
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+2. Install dependencies:
+```bash
+npm install
 ```
+
+3. Configure environment variables:
+```bash
+cp .env.example .env.local
+```
+
+Edit `.env.local` and set your API endpoints:
+```env
+VITE_API_BASE_URL=http://localhost:5175
+VITE_WS_BASE_URL=ws://localhost:5175
+```
+
+4. Start the development server:
+```bash
+npm run dev
+```
+
+The application will be available at `http://localhost:5173`
+
+## 🧪 Testing
+
+Run the test suite:
+```bash
+npm test
+```
+
+Run tests with coverage:
+```bash
+npm run test:coverage
+```
+
+Run tests with UI:
+```bash
+npm run test:ui
+```
+
+## 🏗️ Building for Production
+
+Build the application:
+```bash
+npm run build
+```
+
+Preview the production build:
+```bash
+npm run preview
+```
+
+## 🐳 Docker Deployment
+
+Build and run with Docker:
+```bash
+docker build -t cantorium-front .
+docker run -p 80:80 cantorium-front
+```
+
+## 📝 Code Quality
+
+### Linting
+
+Run ESLint:
+```bash
+npm run lint
+```
+
+### Type Checking
+
+TypeScript type checking is run automatically during build. To check types manually:
+```bash
+npx tsc --noEmit
+```
+
+## 🔒 Security
+
+- All dependencies are regularly audited using `npm audit`
+- Security vulnerabilities are addressed promptly
+- Environment variables are used for sensitive configuration
+- Input validation and sanitization are implemented
+- Regular security scans via CI/CD pipeline
+
+## 🏛️ Architecture
+
+### Project Structure
+
+```
+Cantorium-front/
+├── .github/              # GitHub Actions workflows
+├── public/               # Static assets
+├── src/
+│   ├── assets/          # Images, fonts, etc.
+│   ├── components/      # React components
+│   │   └── ui/         # Reusable UI components
+│   ├── pages/          # Page components
+│   ├── test/           # Test utilities and setup
+│   ├── App.tsx         # Main application component
+│   ├── auth.tsx        # Authentication context
+│   ├── config.ts       # Configuration utilities
+│   └── main.tsx        # Application entry point
+├── .env                # Environment variables
+├── Dockerfile          # Docker configuration
+├── vitest.config.ts    # Test configuration
+├── vite.config.ts      # Vite configuration
+└── tsconfig.json       # TypeScript configuration
+```
+
+### Tech Stack
+
+- **Framework**: React 19 with TypeScript
+- **Build Tool**: Vite 7
+- **Styling**: Tailwind CSS 4
+- **Routing**: React Router 7
+- **Testing**: Vitest + React Testing Library
+- **Linting**: ESLint 9 with TypeScript ESLint
+- **Type Checking**: TypeScript 5.9
+
+## 🤝 Contributing
+
+We welcome contributions! Please follow these steps:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes
+4. Write or update tests as needed
+5. Ensure all tests pass (`npm test`)
+6. Ensure linting passes (`npm run lint`)
+7. Commit your changes (`git commit -m 'Add amazing feature'`)
+8. Push to the branch (`git push origin feature/amazing-feature`)
+9. Open a Pull Request
+
+### Code Style
+
+- Follow the existing code style
+- Use TypeScript for all new code
+- Write meaningful commit messages
+- Add tests for new features
+- Update documentation as needed
+
+## 📊 CI/CD
+
+This project uses GitHub Actions for continuous integration and deployment:
+
+- **CI Pipeline**: Runs on all PRs and pushes to main/develop
+  - Linting
+  - Type checking
+  - Unit tests
+  - Build verification
+  - Security audits
+
+- **CD Pipeline**: Deploys to production on pushes to main
+  - Builds Docker image
+  - Pushes to GitHub Container Registry
+  - Can be extended for cloud deployment
+
+## 🔧 Configuration
+
+### Environment Variables
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `VITE_API_BASE_URL` | Backend API URL | `http://localhost:5175` |
+| `VITE_WS_BASE_URL` | WebSocket server URL | `ws://localhost:5175` |
+
+### TypeScript Configuration
+
+The project uses strict TypeScript settings for maximum type safety. See `tsconfig.json` for details.
+
+## 📱 Browser Support
+
+- Chrome (latest 2 versions)
+- Firefox (latest 2 versions)
+- Safari (latest 2 versions)
+- Edge (latest 2 versions)
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+## 👥 Authors
+
+- **Youngman-d-coder** - [GitHub](https://github.com/Youngman-d-coder)
+
+## 🙏 Acknowledgments
+
+- React team for the amazing framework
+- Vite team for the blazing-fast build tool
+- All contributors and users of Cantorium
+
+## 📞 Support
+
+If you have any questions or need help:
+
+- Open an issue on GitHub
+- Check the documentation
+- Join our community discussions
+
+---
+
+Made with ❤️ by the Cantorium team

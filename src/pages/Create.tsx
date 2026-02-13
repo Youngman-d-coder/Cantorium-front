@@ -165,7 +165,10 @@ Cantorium will carry you home`);
                     key={lang.code}
                     onClick={() => {
                       setSelectedLang(lang.code);
-                      setSelectedAccent(lang.accents[0]);
+                      const firstAccent = lang.accents[0];
+                      if (firstAccent) {
+                        setSelectedAccent(firstAccent);
+                      }
                     }}
                     className={`rounded-full border px-3 py-1.5 text-xs transition-all duration-200 flex items-center gap-1.5 ${
                       selectedLang === lang.code
