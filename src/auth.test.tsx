@@ -1,10 +1,34 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { AuthProvider, useAuth } from './auth';
 
+// Mock Firebase modules
+vi.mock('./firebase', () => ({
+  auth: null,
+  db: null,
+}));
+
+vi.mock('./services/firebaseAuth', () => ({
+  signOut: vi.fn().mockResolvedValue(undefined),
+  getCurrentUser: vi.fn().mockResolvedValue(null),
+}));
+
+vi.mock('firebase/auth', () => ({
+  onAuthStateChanged: vi.fn((_auth, callback) => {
+    // Immediately call callback with null user
+    callback(null);
+    // Return unsubscribe function
+    return vi.fn();
+  }),
+}));
+
 // Test component that uses the auth hook
 function TestComponent() {
-  const { user, signOut } = useAuth();
+  const { user, signOut, loading } = useAuth();
+  
+  if (loading) {
+    return <div data-testid="loading">Loading...</div>;
+  }
   
   return (
     <div>
@@ -15,12 +39,22 @@ function TestComponent() {
 }
 
 describe('AuthProvider', () => {
-  it('should provide auth context', () => {
+  beforeEach(() => {
+    // Clear localStorage before each test
+    localStorage.clear();
+  });
+
+  it('should provide auth context', async () => {
     render(
       <AuthProvider>
         <TestComponent />
       </AuthProvider>
     );
+    
+    // Wait for loading to finish
+    await vi.waitFor(() => {
+      expect(screen.queryByTestId('loading')).not.toBeInTheDocument();
+    });
     
     expect(screen.getByTestId('user-status')).toHaveTextContent('Logged Out');
   });

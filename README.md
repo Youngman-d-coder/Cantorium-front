@@ -8,6 +8,8 @@ A modern, industry-ready web application for choral music composition powered by
 ## 🚀 Features
 
 - **AI-Powered Composition**: Create choral music with AI assistance
+- **Firebase Authentication**: Secure user accounts with email/password, Google, and GitHub sign-in
+- **Cloud Database**: Store compositions, practice sessions, and user data in Firestore
 - **Practice Studio**: Interactive practice sessions with voice-part isolation
 - **Composition Library**: Organize and manage your musical works
 - **Real-time Collaboration**: WebSocket-based live updates
@@ -41,10 +43,16 @@ npm install
 cp .env.example .env.local
 ```
 
-Edit `.env.local` and set your API endpoints:
+Edit `.env.local` and set your Firebase configuration. See [FIREBASE_SETUP.md](FIREBASE_SETUP.md) for detailed instructions on setting up Firebase.
+
+**Required Firebase environment variables:**
 ```env
-VITE_API_BASE_URL=http://localhost:5175
-VITE_WS_BASE_URL=ws://localhost:5175
+VITE_FIREBASE_API_KEY=your-api-key-here
+VITE_FIREBASE_AUTH_DOMAIN=your-project-id.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=your-project-id
+VITE_FIREBASE_STORAGE_BUCKET=your-project-id.appspot.com
+VITE_FIREBASE_MESSAGING_SENDER_ID=your-sender-id
+VITE_FIREBASE_APP_ID=your-app-id
 ```
 
 4. Start the development server:
@@ -144,6 +152,7 @@ Cantorium-front/
 
 - **Framework**: React 19 with TypeScript
 - **Build Tool**: Vite 7
+- **Backend**: Firebase (Authentication & Firestore)
 - **Styling**: Tailwind CSS 4
 - **Routing**: React Router 7
 - **Testing**: Vitest + React Testing Library
@@ -192,10 +201,18 @@ This project uses GitHub Actions for continuous integration and deployment:
 
 ### Environment Variables
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `VITE_API_BASE_URL` | Backend API URL | `http://localhost:5175` |
-| `VITE_WS_BASE_URL` | WebSocket server URL | `ws://localhost:5175` |
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `VITE_FIREBASE_API_KEY` | Firebase API key | Yes |
+| `VITE_FIREBASE_AUTH_DOMAIN` | Firebase auth domain | Yes |
+| `VITE_FIREBASE_PROJECT_ID` | Firebase project ID | Yes |
+| `VITE_FIREBASE_STORAGE_BUCKET` | Firebase storage bucket | Yes |
+| `VITE_FIREBASE_MESSAGING_SENDER_ID` | Firebase messaging sender ID | Yes |
+| `VITE_FIREBASE_APP_ID` | Firebase app ID | Yes |
+| `VITE_API_BASE_URL` | Backend API URL (legacy) | No |
+| `VITE_WS_BASE_URL` | WebSocket server URL (legacy) | No |
+
+See [FIREBASE_SETUP.md](FIREBASE_SETUP.md) for complete setup instructions.
 
 ### TypeScript Configuration
 
