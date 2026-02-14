@@ -189,8 +189,8 @@ export default function Dashboard() {
       {/* Stats Grid */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4 stagger-animation">
         {loading
-          ? Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="relative overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/80 p-4 shadow-lg shadow-slate-950/40">
+          ? <>
+              <div className="relative overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/80 p-4 shadow-lg shadow-slate-950/40">
                 <div className="flex items-center justify-between">
                   <div className="space-y-2">
                     <Skeleton className="h-4 w-24" />
@@ -199,7 +199,34 @@ export default function Dashboard() {
                   <Skeleton className="h-10 w-10 rounded-xl" />
                 </div>
               </div>
-            ))
+              <div className="relative overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/80 p-4 shadow-lg shadow-slate-950/40">
+                <div className="flex items-center justify-between">
+                  <div className="space-y-2">
+                    <Skeleton className="h-4 w-24" />
+                    <Skeleton className="h-8 w-16" />
+                  </div>
+                  <Skeleton className="h-10 w-10 rounded-xl" />
+                </div>
+              </div>
+              <div className="relative overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/80 p-4 shadow-lg shadow-slate-950/40">
+                <div className="flex items-center justify-between">
+                  <div className="space-y-2">
+                    <Skeleton className="h-4 w-24" />
+                    <Skeleton className="h-8 w-16" />
+                  </div>
+                  <Skeleton className="h-10 w-10 rounded-xl" />
+                </div>
+              </div>
+              <div className="relative overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/80 p-4 shadow-lg shadow-slate-950/40">
+                <div className="flex items-center justify-between">
+                  <div className="space-y-2">
+                    <Skeleton className="h-4 w-24" />
+                    <Skeleton className="h-8 w-16" />
+                  </div>
+                  <Skeleton className="h-10 w-10 rounded-xl" />
+                </div>
+              </div>
+            </>
           : stats.map((stat, index) => (
               <div
                 key={stat.label}
@@ -248,8 +275,8 @@ export default function Dashboard() {
               </thead>
               <tbody className="divide-y divide-slate-800/80">
                 {loading
-                  ? Array.from({ length: 3 }).map((_, i) => (
-                      <tr key={i}>
+                  ? <>
+                      <tr>
                         <td className="px-4 py-3"><Skeleton className="h-4 w-32" /></td>
                         <td className="px-4 py-3 hidden sm:table-cell"><Skeleton className="h-4 w-16" /></td>
                         <td className="px-4 py-3 hidden md:table-cell"><Skeleton className="h-4 w-16" /></td>
@@ -257,7 +284,23 @@ export default function Dashboard() {
                         <td className="px-4 py-3"><Skeleton className="h-4 w-14" /></td>
                         <td className="px-4 py-3 hidden md:table-cell"><Skeleton className="h-4 w-28" /></td>
                       </tr>
-                    ))
+                      <tr>
+                        <td className="px-4 py-3"><Skeleton className="h-4 w-32" /></td>
+                        <td className="px-4 py-3 hidden sm:table-cell"><Skeleton className="h-4 w-16" /></td>
+                        <td className="px-4 py-3 hidden md:table-cell"><Skeleton className="h-4 w-16" /></td>
+                        <td className="px-4 py-3 hidden lg:table-cell"><Skeleton className="h-4 w-20" /></td>
+                        <td className="px-4 py-3"><Skeleton className="h-4 w-14" /></td>
+                        <td className="px-4 py-3 hidden md:table-cell"><Skeleton className="h-4 w-28" /></td>
+                      </tr>
+                      <tr>
+                        <td className="px-4 py-3"><Skeleton className="h-4 w-32" /></td>
+                        <td className="px-4 py-3 hidden sm:table-cell"><Skeleton className="h-4 w-16" /></td>
+                        <td className="px-4 py-3 hidden md:table-cell"><Skeleton className="h-4 w-16" /></td>
+                        <td className="px-4 py-3 hidden lg:table-cell"><Skeleton className="h-4 w-20" /></td>
+                        <td className="px-4 py-3"><Skeleton className="h-4 w-14" /></td>
+                        <td className="px-4 py-3 hidden md:table-cell"><Skeleton className="h-4 w-28" /></td>
+                      </tr>
+                    </>
                   : compositions.slice(0, 10).map((c) => (
                       <tr key={c.id} className="hover:bg-slate-800/60 transition-colors cursor-pointer group">
                         <td className="px-4 py-3">

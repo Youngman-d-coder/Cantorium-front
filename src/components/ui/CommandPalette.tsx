@@ -93,7 +93,13 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center pt-[15vh] px-4">
-      <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm animate-fade-in" onClick={onClose} />
+      <button
+        type="button"
+        className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm animate-fade-in cursor-default"
+        onClick={onClose}
+        aria-label="Close command palette"
+        tabIndex={-1}
+      />
       <div className="relative w-full max-w-xl animate-scale-in rounded-2xl border border-cyan-400/30 bg-slate-900/95 shadow-2xl shadow-cyan-900/40">
         {/* Search Input */}
         <div className="flex items-center gap-3 border-b border-slate-800 px-4 py-3">
