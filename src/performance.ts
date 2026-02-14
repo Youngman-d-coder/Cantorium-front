@@ -92,13 +92,15 @@ export function observeWebVitals(callback: (metric: PerformanceMetric) => void):
  * Log performance metrics (can be extended to send to analytics service)
  */
 export function logPerformanceMetric(metric: PerformanceMetric): void {
-  console.log(`[Performance] ${metric.name}:`, {
-    value: metric.value,
-    rating: metric.rating,
-    timestamp: new Date(metric.timestamp).toISOString(),
-  });
+  if (import.meta.env.DEV) {
+    console.log(`[Performance] ${metric.name}:`, {
+      value: metric.value,
+      rating: metric.rating,
+      timestamp: new Date(metric.timestamp).toISOString(),
+    });
+  }
 
-  // TODO: Send to analytics service
+  // In production, metrics could be sent to an analytics service
   // Example: sendToAnalytics(metric);
 }
 
@@ -126,7 +128,9 @@ export function measureNavigationTiming(): void {
           'Total Load Time': navTiming.loadEventEnd - navTiming.fetchStart,
         };
 
-        console.log('[Performance] Navigation Timing:', metrics);
+        if (import.meta.env.DEV) {
+          console.log('[Performance] Navigation Timing:', metrics);
+        }
       } else if (window.performance.timing) {
         // Fallback to Navigation Timing Level 1 API (deprecated but still widely supported)
         const timing = window.performance.timing;
@@ -141,7 +145,9 @@ export function measureNavigationTiming(): void {
           'Total Load Time': timing.loadEventEnd - navigationStart,
         };
 
-        console.log('[Performance] Navigation Timing (deprecated API):', metrics);
+        if (import.meta.env.DEV) {
+          console.log('[Performance] Navigation Timing (deprecated API):', metrics);
+        }
       }
     }, 0);
   });

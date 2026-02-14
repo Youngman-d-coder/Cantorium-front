@@ -14,13 +14,27 @@ try {
   console.error('Environment validation failed:', error);
   // Show error message if in development
   if (import.meta.env.DEV) {
-    document.body.innerHTML = `
-      <div style="padding: 2rem; font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-        <h1 style="color: #ef4444;">Environment Configuration Error</h1>
-        <p style="color: #64748b;">${error instanceof Error ? error.message : 'Unknown error'}</p>
-        <p style="color: #64748b; margin-top: 1rem;">Please check your .env file and ensure all required variables are set.</p>
-      </div>
-    `;
+    const errorDiv = document.createElement('div');
+    errorDiv.style.cssText = 'padding: 2rem; font-family: sans-serif; max-width: 600px; margin: 0 auto;';
+    
+    const heading = document.createElement('h1');
+    heading.style.color = '#ef4444';
+    heading.textContent = 'Environment Configuration Error';
+    
+    const errorMessage = document.createElement('p');
+    errorMessage.style.color = '#64748b';
+    errorMessage.textContent = error instanceof Error ? error.message : 'Unknown error';
+    
+    const instruction = document.createElement('p');
+    instruction.style.cssText = 'color: #64748b; margin-top: 1rem;';
+    instruction.textContent = 'Please check your .env file and ensure all required variables are set.';
+    
+    errorDiv.appendChild(heading);
+    errorDiv.appendChild(errorMessage);
+    errorDiv.appendChild(instruction);
+    
+    document.body.innerHTML = '';
+    document.body.appendChild(errorDiv);
     throw error;
   }
 }

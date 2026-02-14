@@ -36,6 +36,10 @@ type LogEntry = {
   message: string;
 };
 
+type WebSocketMessage = 
+  | { type: "activity"; payload: Activity }
+  | { type: "log"; payload: LogEntry };
+
 const fallbackCompositions: Composition[] = [
   { id: "1", title: "Nocturne in Indigo", parts: ["SATB"], language: "English", difficulty: "Intermediate", status: "shared", updatedAt: new Date().toISOString() },
   { id: "2", title: "Aurora Gloria", parts: ["SSA"], language: "Latin", difficulty: "Advanced", status: "draft", updatedAt: new Date().toISOString() },
@@ -129,14 +133,19 @@ export default function Dashboard() {
     };
     ws.onmessage = (evt) => {
       try {
-        const msg = JSON.parse(evt.data);
-        if (msg.type === "activity") {
+        const msg = JSON.parse(evt.data) as WebSocketMessage;
+        if (!msg || typeof msg !== 'object' || !('type' in msg)) {
+          console.error('Invalid WebSocket message format:', evt.data);
+          return;
+        }
+        
+        if (msg.type === "activity" && msg.payload) {
           setActivity((prev) => [msg.payload, ...prev].slice(0, 50));
-        } else if (msg.type === "log") {
+        } else if (msg.type === "log" && msg.payload) {
           setLogs((prev) => [msg.payload, ...prev].slice(0, 200));
         }
       } catch (e) {
-        console.error(e);
+        console.error('Failed to parse WebSocket message:', e, evt.data);
       }
     };
     ws.onerror = () => {
