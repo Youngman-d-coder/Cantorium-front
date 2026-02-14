@@ -1,12 +1,12 @@
 /**
  * Validates that all required environment variables are present
  * Throws an error if any required variables are missing
+ * 
+ * Note: VITE_API_BASE_URL and VITE_WS_BASE_URL are no longer required
+ * as they have fallback values in config.ts
  */
 export function validateEnv(): void {
-  const required = [
-    'VITE_API_BASE_URL',
-    'VITE_WS_BASE_URL',
-  ] as const;
+  const required = [] as const;
 
   const missing: string[] = [];
 
