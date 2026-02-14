@@ -327,7 +327,13 @@ export function Modal({ isOpen, onClose, title, children, size = "md" }: ModalPr
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm animate-fade-in" onClick={onClose} />
+      <button
+        type="button"
+        className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm animate-fade-in cursor-default"
+        onClick={onClose}
+        aria-label="Close modal"
+        tabIndex={-1}
+      />
       <div className={`relative w-full ${sizeClasses[size]} animate-scale-in rounded-3xl border border-cyan-400/20 bg-slate-900/95 p-6 shadow-2xl shadow-cyan-900/30`}>
         {title && (
           <div className="mb-4 flex items-center justify-between">

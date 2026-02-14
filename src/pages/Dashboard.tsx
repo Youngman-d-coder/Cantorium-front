@@ -36,6 +36,20 @@ type LogEntry = {
   message: string;
 };
 
+type WebSocketMessage = 
+  | { type: "activity"; payload: Activity }
+  | { type: "log"; payload: LogEntry };
+
+function isValidWebSocketMessage(data: unknown): data is WebSocketMessage {
+  if (!data || typeof data !== 'object') return false;
+  const msg = data as Record<string, unknown>;
+  
+  if (!('type' in msg) || typeof msg.type !== 'string') return false;
+  if (!('payload' in msg) || !msg.payload) return false;
+  
+  return msg.type === 'activity' || msg.type === 'log';
+}
+
 const fallbackCompositions: Composition[] = [
   { id: "1", title: "Nocturne in Indigo", parts: ["SATB"], language: "English", difficulty: "Intermediate", status: "shared", updatedAt: new Date().toISOString() },
   { id: "2", title: "Aurora Gloria", parts: ["SSA"], language: "Latin", difficulty: "Advanced", status: "draft", updatedAt: new Date().toISOString() },
@@ -76,6 +90,30 @@ const statusVariants: Record<Composition["status"], "default" | "success" | "war
   shared: "info",
   rendering: "warning",
 };
+
+// Skeleton loader components
+const SkeletonStatCard = () => (
+  <div className="relative overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/80 p-4 shadow-lg shadow-slate-950/40">
+    <div className="flex items-center justify-between">
+      <div className="space-y-2">
+        <Skeleton className="h-4 w-24" />
+        <Skeleton className="h-8 w-16" />
+      </div>
+      <Skeleton className="h-10 w-10 rounded-xl" />
+    </div>
+  </div>
+);
+
+const SkeletonTableRow = () => (
+  <tr>
+    <td className="px-4 py-3"><Skeleton className="h-4 w-32" /></td>
+    <td className="px-4 py-3 hidden sm:table-cell"><Skeleton className="h-4 w-16" /></td>
+    <td className="px-4 py-3 hidden md:table-cell"><Skeleton className="h-4 w-16" /></td>
+    <td className="px-4 py-3 hidden lg:table-cell"><Skeleton className="h-4 w-20" /></td>
+    <td className="px-4 py-3"><Skeleton className="h-4 w-14" /></td>
+    <td className="px-4 py-3 hidden md:table-cell"><Skeleton className="h-4 w-28" /></td>
+  </tr>
+);
 
 export default function Dashboard() {
   const [compositions, setCompositions] = useState<Composition[]>([]);
@@ -129,14 +167,19 @@ export default function Dashboard() {
     };
     ws.onmessage = (evt) => {
       try {
-        const msg = JSON.parse(evt.data);
-        if (msg.type === "activity") {
-          setActivity((prev) => [msg.payload, ...prev].slice(0, 50));
-        } else if (msg.type === "log") {
-          setLogs((prev) => [msg.payload, ...prev].slice(0, 200));
+        const data = JSON.parse(evt.data);
+        if (!isValidWebSocketMessage(data)) {
+          console.error('Invalid WebSocket message format:', evt.data);
+          return;
+        }
+        
+        if (data.type === "activity") {
+          setActivity((prev) => [data.payload, ...prev].slice(0, 50));
+        } else if (data.type === "log") {
+          setLogs((prev) => [data.payload, ...prev].slice(0, 200));
         }
       } catch (e) {
-        console.error(e);
+        console.error('Failed to parse WebSocket message:', e, evt.data);
       }
     };
     ws.onerror = () => {
@@ -180,17 +223,12 @@ export default function Dashboard() {
       {/* Stats Grid */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4 stagger-animation">
         {loading
-          ? Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="relative overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/80 p-4 shadow-lg shadow-slate-950/40">
-                <div className="flex items-center justify-between">
-                  <div className="space-y-2">
-                    <Skeleton className="h-4 w-24" />
-                    <Skeleton className="h-8 w-16" />
-                  </div>
-                  <Skeleton className="h-10 w-10 rounded-xl" />
-                </div>
-              </div>
-            ))
+          ? <>
+              <SkeletonStatCard />
+              <SkeletonStatCard />
+              <SkeletonStatCard />
+              <SkeletonStatCard />
+            </>
           : stats.map((stat, index) => (
               <div
                 key={stat.label}
@@ -239,16 +277,11 @@ export default function Dashboard() {
               </thead>
               <tbody className="divide-y divide-slate-800/80">
                 {loading
-                  ? Array.from({ length: 3 }).map((_, i) => (
-                      <tr key={i}>
-                        <td className="px-4 py-3"><Skeleton className="h-4 w-32" /></td>
-                        <td className="px-4 py-3 hidden sm:table-cell"><Skeleton className="h-4 w-16" /></td>
-                        <td className="px-4 py-3 hidden md:table-cell"><Skeleton className="h-4 w-16" /></td>
-                        <td className="px-4 py-3 hidden lg:table-cell"><Skeleton className="h-4 w-20" /></td>
-                        <td className="px-4 py-3"><Skeleton className="h-4 w-14" /></td>
-                        <td className="px-4 py-3 hidden md:table-cell"><Skeleton className="h-4 w-28" /></td>
-                      </tr>
-                    ))
+                  ? <>
+                      <SkeletonTableRow />
+                      <SkeletonTableRow />
+                      <SkeletonTableRow />
+                    </>
                   : compositions.slice(0, 10).map((c) => (
                       <tr key={c.id} className="hover:bg-slate-800/60 transition-colors cursor-pointer group">
                         <td className="px-4 py-3">
