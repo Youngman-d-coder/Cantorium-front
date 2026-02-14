@@ -2,26 +2,15 @@
  * Validates that all required environment variables are present
  * Throws an error if any required variables are missing
  * 
- * Note: VITE_API_BASE_URL and VITE_WS_BASE_URL are no longer required
- * as they have fallback values in config.ts
+ * Note: Currently no environment variables are strictly required:
+ * - VITE_API_BASE_URL and VITE_WS_BASE_URL have fallback values in config.ts
+ * - Firebase configuration is checked in firebase.ts and gracefully handles missing config
+ * 
+ * This function is kept as a placeholder for future required environment variables.
  */
 export function validateEnv(): void {
-  const required = [] as const;
-
-  const missing: string[] = [];
-
-  for (const key of required) {
-    if (!import.meta.env[key]) {
-      missing.push(key);
-    }
-  }
-
-  if (missing.length > 0) {
-    throw new Error(
-      `Missing required environment variables:\n${missing.join('\n')}\n\n` +
-      'Please ensure all required environment variables are set in your .env file.'
-    );
-  }
+  // Currently no required environment variables
+  // Add required variables here if needed in the future
 }
 
 /**
